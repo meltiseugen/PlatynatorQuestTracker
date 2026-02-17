@@ -20,6 +20,20 @@ local L = Locales.enUS
 
 L["THANKS_FOR_USING_PLATYNATOR_DONATE"] = "Thanks for using Platynator. Consider donating to support development"
 
+L["QUEST_TRACKER_PARTY_SUPPORT_TAB"] = "Party support"
+L["QUEST_TRACKER_FIRST_ONLY"] = "If unit is part of multiple quests, show first quest only"
+L["QUEST_TRACKER_PARTY_SUPPORT"] = "Display party members' quest progress"
+L["QUEST_TRACKER_PARTY_SUPPORT_COLLAPSE"] = "If same progression, collapse into one line"
+L["QUEST_TRACKER_FIRST_ONLY"] = "If unit part of multiple quests, show first quest only"
+L["QUEST_TRACKER_PARTY_SUPPORT"] = "Display party members quest progress"
+L["QUEST_TRACKER_TOOLTIP_NOTE"] = "! ! This widget uses tooltips. Consider using Questie to work on Classic/TBC. ! !"
+L["ME"] = "Me"
+L["QUEST_TRACKER_FIRST_ONLY"] = "Show first quest only"
+L["QUEST_TRACKER_PARTY_SUPPORT"] = "Party support"
+L["QUEST_TRACKER_FIRST_ONLY_INFO"] = "When checked, only the first quest line is shown."
+L["QUEST_TRACKER_PARTY_SUPPORT_INFO"] = "When checked, show party members' quest progress (party only)."
+L["QUEST_TRACKER"] = "Quest Tracker"
+
 L["PLATYNATOR"] = "Platynator"
 L["DESIGNER"] = "Designer"
 L["BEHAVIOUR"] = "Behaviour"

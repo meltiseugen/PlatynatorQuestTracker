@@ -73,6 +73,7 @@ Display/RaidMarker.lua
 Display/PvPMarker.lua
 Display/ClassMarker.lua
 Display/Widgets.lua
+Display/QuestTrackerText.lua
 
 API/Main.lua
 

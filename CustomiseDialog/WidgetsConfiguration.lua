@@ -5,6 +5,13 @@ local LSM = LibStub("LibSharedMedia-3.0")
 
 local textureHeight = 20
 
+local tocVersion
+if type(GetBuildInfo) == "function" then
+  local rawTocVersion = select(4, GetBuildInfo())
+  tocVersion = tonumber(rawTocVersion)
+end
+local isClassicTbc = not tocVersion or tocVersion < 30000
+
 local function GetLabelsValues(allAssets, filter, showHeight)
   local labels, values = {}, {}
 
@@ -764,6 +771,55 @@ addonTable.CustomiseDialog.WidgetsConfig = {
             end,
           },
         }
+      }
+    },
+    ["questTracker"] = {
+      {
+        label = addonTable.Locales.GENERAL,
+        entries = {
+          {
+            label = addonTable.Locales.QUEST_TRACKER_TOOLTIP_NOTE,
+            kind = "note",
+            setter = function() end,
+            getter = function() return nil end,
+            hide = not isClassicTbc,
+          },
+          {
+            label = addonTable.Locales.QUEST_TRACKER_FIRST_ONLY,
+            kind = "checkbox",
+            setter = function(details, value)
+              details.firstOnly = value
+            end,
+            getter = function(details)
+              return details.firstOnly ~= false
+            end,
+          },
+        }
+      },
+      {
+        label = addonTable.Locales.QUEST_TRACKER_PARTY_SUPPORT_TAB,
+        entries = {
+                    {
+            label = addonTable.Locales.QUEST_TRACKER_PARTY_SUPPORT,
+            kind = "checkbox",
+            setter = function(details, value)
+              details.partySupport = value
+            end,
+            getter = function(details)
+              return details.partySupport == true
+            end,
+          },
+          {
+            label = addonTable.Locales.QUEST_TRACKER_PARTY_SUPPORT_COLLAPSE,
+            kind = "checkbox",
+            setter = function(details, value)
+              details.partySupportCollapse = value
+            end,
+            getter = function(details)
+              return details.partySupportCollapse == true
+            end,
+          },
+        },
       }
     },
   },

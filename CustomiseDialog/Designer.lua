@@ -848,6 +848,8 @@ function addonTable.CustomiseDialog.GetMainDesigner(parent)
           display = addonTable.Locales.ARCANE_FLURRY
         elseif w.details.kind == "level" then
           display = "60"
+        elseif w.details.kind == "questTracker" then
+          display = "0/7 Dragons killed"
         elseif w.details.kind == "quest" then
           display = "3/7"
         end
@@ -1041,6 +1043,8 @@ function addonTable.CustomiseDialog.GetMainDesigner(parent)
           frame = addonTable.CustomiseDialog.Components.GetColorPicker(parent, e.label, 28, Setter)
         elseif e.kind == "autoColors" then
           frame = GetAutomaticColors(parent, e.lockedElements, e.addAlpha)
+        elseif e.kind == "note" then
+          frame = addonTable.CustomiseDialog.Components.GetNote(parent, e.label)
         end
 
         if frame then
