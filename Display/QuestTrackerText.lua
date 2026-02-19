@@ -158,6 +158,31 @@ local function IsQuestProgressText(text, allowFallback)
   return false
 end
 
+-- Treat objectives as complete when numeric progress reached target (e.g. "12/12", "100%").
+local function IsCompletedQuestProgress(text)
+  text = NormalizeText(text)
+  if not text or text == "" then
+    return false
+  end
+
+  for current, needed in text:gmatch("(%d+)%s*/%s*(%d+)") do
+    local currentValue = tonumber(current)
+    local neededValue = tonumber(needed)
+    if currentValue and neededValue and neededValue > 0 and currentValue >= neededValue then
+      return true
+    end
+  end
+
+  for percent in text:gmatch("(%d+)%s*%%") do
+    local percentValue = tonumber(percent)
+    if percentValue and percentValue >= 100 then
+      return true
+    end
+  end
+
+  return false
+end
+
 local questieTooltips
 
 -- Questie only hooks the default GameTooltip, so use its API when available.
@@ -318,6 +343,9 @@ local function GetQuestTextFromQuestie(unit, firstOnly, partySupport, partySuppo
             else
               output = StripQuestieNames(line, playerNames)
             end
+          end
+          if output and output ~= "" and IsCompletedQuestProgress(output) then
+            output = nil
           end
           if output and output ~= "" then
             if collapseEnabled then
@@ -594,6 +622,14 @@ local function CreateQuestLineState(firstOnly, partySupport, partySupportCollaps
 
   -- Add a quest line based on mode (self-only vs party support).
   local function AddQuestLine(text)
+    local cleanText = CleanProgressText(text)
+    if not cleanText or cleanText == "" then
+      return nil
+    end
+    if IsCompletedQuestProgress(cleanText) then
+      return nil
+    end
+
     if partySupportEnabled then
       if not sawPlayerHeader or not currentName then
         return nil
@@ -605,21 +641,18 @@ local function CreateQuestLineState(firstOnly, partySupport, partySupportCollaps
       if firstOnly then
         seenPlayers[seenKey] = true
       end
-      local cleanText = CleanProgressText(text)
-      if cleanText and cleanText ~= "" then
-        if currentIsPlayer then
-          table.insert(results, {text = cleanText, cleanText = cleanText, isPlayer = true})
-          if collapseEnabled then
-            playerProgress[cleanText] = true
-            MarkCollapsed(cleanText)
-          end
-        else
-          if collapseEnabled and playerProgress[cleanText] then
-            return nil
-          end
-          local entryText = cleanText .. " (" .. FormatGroupMemberName(currentName) .. ")"
-          table.insert(results, {text = entryText, cleanText = cleanText, isPlayer = false})
+      if currentIsPlayer then
+        table.insert(results, {text = cleanText, cleanText = cleanText, isPlayer = true})
+        if collapseEnabled then
+          playerProgress[cleanText] = true
+          MarkCollapsed(cleanText)
         end
+      else
+        if collapseEnabled and playerProgress[cleanText] then
+          return nil
+        end
+        local entryText = cleanText .. " (" .. FormatGroupMemberName(currentName) .. ")"
+        table.insert(results, {text = entryText, cleanText = cleanText, isPlayer = false})
       end
       return nil
     end
